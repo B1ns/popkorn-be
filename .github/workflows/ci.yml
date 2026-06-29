@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: popkorn
+          POSTGRES_PASSWORD: popkorn201
+          POSTGRES_DB: popkorn_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://popkorn:popkorn201@localhost:5432/popkorn_db
+      REDIS_URL: redis://localhost:6379/0
+      TMDB_API_KEY: dummy_key_for_ci
+      TMDB_BASE_URL: https://api.themoviedb.org/3
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: uv 설치
+        uses: astral-sh/setup-uv@v3
+
+      - name: Python 의존성 설치
+        run: uv sync --all-extras --dev
+
+      - name: Ruff 린트 검사
+        run: uv run ruff check .
+
+      - name: Pytest 테스트
+        run: uv run pytest -v
