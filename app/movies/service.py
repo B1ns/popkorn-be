@@ -1,5 +1,6 @@
 # app/movies/service.py
-import uuid, json
+import uuid
+import json
 from datetime import date, datetime, timezone
 
 import httpx
