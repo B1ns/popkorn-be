@@ -1,12 +1,14 @@
 # app/movies/service.py
-import uuid
+import uuid, json
 from datetime import date, datetime, timezone
 
 import httpx
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.redis import redis_client
 from app.movies.models import Movie
+from app.movies.schemas import MovieResponse
 from app.movies.repository import MovieRepository
 
 
@@ -44,10 +46,26 @@ class MovieService:
     
     
     async def get_movies(self, page: int = 1, size: int = 20) -> dict:
+        cache_key = f"movies:list:page={page}:size={size}"
+        
+        cached = await redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+        
         offset = (page - 1) * size
         movies = await self.repo.list(offset=offset, limit=size)
         total = await self.repo.count()
-        return {"total": total, "items": movies}
+        
+        items = [
+            MovieResponse.model_validate(m).model_dump(mode="json")
+            for m in movies
+        ]
+        
+        result = {"total": total, "items": items}
+        
+        await redis_client.set(cache_key, json.dumps(result), ex=3600)
+        
+        return result
     
     
     async def getmovie(self, movie_id: uuid.UUID) -> Movie | None:
