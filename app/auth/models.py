@@ -1,7 +1,6 @@
 # app/auth/models.py
 
 import uuid 
-from datetime import datetime
 
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID
