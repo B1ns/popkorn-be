@@ -18,6 +18,6 @@ class User(Base):
     )
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    create_at: Mapped[str] = mapped_column(
+    created_at: Mapped[str] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
