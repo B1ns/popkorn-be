@@ -10,6 +10,7 @@ dependencies = [
     "bcrypt>=4.1",
     "fastapi[standard]==0.115.0",
     "pydantic-settings==2.3.0",
+    "pydantic[email]>=2.13.4",
     "pyjwt>=2.13.0",
     "redis>=8.0.1",
     "sqlalchemy[asyncio]==2.0.31",
