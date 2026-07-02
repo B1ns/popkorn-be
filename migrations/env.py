@@ -10,6 +10,7 @@ from alembic import context
 
 import app.movies # noqa: F401
 import app.auth # noqa: F401
+import app.comments # noqa: F401
 from app.core.config import settings
 from app.core.database import Base
 
