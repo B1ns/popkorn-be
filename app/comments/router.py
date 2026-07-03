@@ -63,6 +63,17 @@ async def delete_comment(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except PermissionError as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    
+    
+@comments_router.get("/{comment_id}/replies", response_model=CommentListResponse)
+async def list_replies(
+    comment_id: uuid.UUID,
+    page: int = Query(default=1, ge=1),
+    size: int = Query(default=20, ge=1, le=100),
+    session: AsyncSession = Depends(get_db),
+):
+    service = CommentService(session)
+    return await service.get_replies(comment_id, page, size)
 
 
 @comments_router.get("/{comment_id}/spoiler", response_model=SpoilerRevealResponse)
