@@ -1,6 +1,7 @@
 # app/auth/models.py
 
 import uuid 
+from datetime import datetime
 
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID
@@ -19,6 +20,6 @@ class User(Base):
     )
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    created_at: Mapped[str] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
