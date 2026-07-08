@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 
@@ -13,11 +14,12 @@ class Base(DeclarativeBase):
     pass
 
 
-def _build_engine():
+def _build_engine(use_null_pool: bool = False):
     return create_async_engine(
         settings.DATABASE_URL,
         echo=True,
         pool_pre_ping=True,
+        poolclass=NullPool if use_null_pool else None,
     )
 
 
@@ -30,9 +32,8 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 def reset_engine():
-    """Celery worker가 포크된 직후 호출 — 부모 프로세스의 엔진을 그대로 물려받지 않고 새로 만든다."""
     global engine, AsyncSessionLocal
-    engine = _build_engine()
+    engine = _build_engine(use_null_pool=True)
     AsyncSessionLocal = async_sessionmaker(
         bind=engine,
         class_=AsyncSession,
