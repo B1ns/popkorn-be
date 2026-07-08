@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     TMDB_API_KEY: str
     TMDB_BASE_URL: str 
     
+    # Gemini
+    GEMINI_API_KEY: str
+    
     # Security
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
