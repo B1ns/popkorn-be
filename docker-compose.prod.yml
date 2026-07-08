@@ -15,7 +15,7 @@ services:
   celery-worker:
     build: .
     container_name: popkorn-celery-worker
-    command: celery -A app.core.celery_app worker --loglevel=info
+    command: uv run celery -A app.core.celery_app worker --loglevel=info
     env_file:
       - .env.prod
     depends_on:
