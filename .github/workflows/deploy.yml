@@ -21,4 +21,5 @@ jobs:
             git reset --hard origin/main
             docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
             docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T app uv run alembic upgrade head
+            docker compose -f docker-compose.prod.yml --env-file .env.prod restart nginx
             docker image prune -f
