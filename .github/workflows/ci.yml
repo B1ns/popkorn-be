@@ -39,6 +39,7 @@ jobs:
       REFRESH_TOKEN_EXPIRE_DAYS: "7"
       TMDB_API_KEY: dummy_key_for_ci
       TMDB_BASE_URL: https://api.themoviedb.org/3
+      GEMINI_API_KEY: dummy_key_for_ci
 
     steps:
       - name: 코드 체크아웃
