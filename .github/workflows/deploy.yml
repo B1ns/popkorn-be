@@ -20,4 +20,5 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+            docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T app uv run alembic upgrade head
             docker image prune -f
