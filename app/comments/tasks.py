@@ -6,9 +6,9 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel
 
+from app.core import database
 from app.core.celery_app import celery_app
 from app.core.config import settings
-from app.core.database import AsyncSessionLocal
 from app.core.pubsub import publish_event
 from app.comments.repository import CommentRepository
 from app.movies.repository import MovieRepository
@@ -65,7 +65,7 @@ def analyze_spoiler(comment_id: str):
 
 
 async def _analyze_spoiler_async(comment_id: str):
-    async with AsyncSessionLocal() as session:
+    async with database.AsyncSessionLocal() as session:
         comment_repo = CommentRepository(session)
         comment = await comment_repo.get_by_id(comment_id)
         if comment is None:
