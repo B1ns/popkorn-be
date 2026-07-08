@@ -1,6 +1,8 @@
 # app/core/celery_app.py
 from celery import Celery
+from celery.signals import worker_process_init
 
+from app.core import database
 from app.core.config import settings
 
 celery_app = Celery(
@@ -15,6 +17,12 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="Asia/Seoul",
     enable_utc=True,
+    broker_connection_retry_on_startup=True
 )
 
 celery_app.autodiscover_tasks(["app.comments"])
+
+
+@worker_process_init.connect
+def _init_worker_db(**kwargs):
+    database.reset_engine()
