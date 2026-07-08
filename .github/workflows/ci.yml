@@ -39,6 +39,7 @@ jobs:
       REFRESH_TOKEN_EXPIRE_DAYS: "7"
       TMDB_API_KEY: dummy_key_for_ci
       TMDB_BASE_URL: https://api.themoviedb.org/3
+      GEMINI_API_KEY: dummy_key_for_ci
 
     steps:
       - name: 코드 체크아웃
@@ -46,6 +47,8 @@ jobs:
 
       - name: uv 설치
         uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
 
       - name: Python 의존성 설치
         run: uv sync --all-extras --dev

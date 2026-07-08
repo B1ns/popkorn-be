@@ -5,6 +5,10 @@ from celery.signals import worker_process_init
 from app.core import database
 from app.core.config import settings
 
+from app.auth import models as auth_models  # noqa: F401
+from app.comments import models as comments_models  # noqa: F401
+from app.movies import models as movies_models  # noqa: F401
+
 celery_app = Celery(
     "popkorn",
     broker=settings.REDIS_URL,
